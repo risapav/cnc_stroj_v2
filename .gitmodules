@@ -1,4 +1,5 @@
-[submodule "firmware"]
+[submodule "MarlinFirmware"]
 	path = MarlinFirmware
 	url = https://github.com/MarlinFirmware/Marlin
-	branch = main
+
+
