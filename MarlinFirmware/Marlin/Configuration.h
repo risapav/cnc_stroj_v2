@@ -864,7 +864,7 @@
 #define Y_DRIVER_TYPE  DRV8825
 #define Z_DRIVER_TYPE  DRV8825
 //#define X2_DRIVER_TYPE A4988
-//#define Y2_DRIVER_TYPE A4988
+#define Y2_DRIVER_TYPE DRV8825
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
@@ -926,14 +926,14 @@
  * Override with M92
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {80, 80, 80, 500 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {100, 100, 100, 100 }
 
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 100, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 200, 200, 200, 200 }
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -946,7 +946,7 @@
  * Override with M201
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 1000, 10000 }
+#define DEFAULT_MAX_ACCELERATION      { 100, 100, 100, 100 }
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -1368,8 +1368,8 @@
 // @section machine
 
 // The size of the printable area
-#define X_BED_SIZE 350
-#define Y_BED_SIZE 400
+#define X_BED_SIZE 300
+#define Y_BED_SIZE 380
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
