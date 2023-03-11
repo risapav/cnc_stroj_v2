@@ -8,11 +8,11 @@ on:
     
 jobs:
   build:
+    runs-on: ubuntu-latest
 #    env:
 #      MARLIN_VERSION: ${{ matrix.branch }}
 #      CONFIG_NAME: ${{ matrix.machine }}
 #    name: ${{ matrix.machine }}-${{ matrix.branch }}
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false # Allow all machines to finish building
       matrix:
