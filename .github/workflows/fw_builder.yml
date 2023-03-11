@@ -9,14 +9,11 @@ on:
     
 jobs:
   build:
-  
     env:
       MARLIN_VERSION: ${{ matrix.branch }}
       CONFIG_NAME: ${{ matrix.machine }}
-
     name: ${{ matrix.machine }}-${{ matrix.branch }}
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false # Allow all machines to finish building
       matrix:
@@ -26,7 +23,6 @@ jobs:
           '["2.1.2"]') }}
         machine:
         - cnc_stroj_v2
-
     steps:
 
     # First, cancel unfinished jobs.
