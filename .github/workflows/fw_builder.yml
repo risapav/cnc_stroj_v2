@@ -77,5 +77,4 @@ jobs:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: Marlin-Release.zip
           asset_name: ${{ matrix.machine }}-${{ matrix.branch }}.zip
-          asset_content_type: application/zip          
-          
+          asset_content_type: application/zip                   
