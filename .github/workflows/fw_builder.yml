@@ -58,7 +58,9 @@ jobs:
         
     - name: Compile firmware
       run: |
-        pio run --project-dir Marlin --environment ${{ github.event.inputs.board }}
+        pio run --project-dir Marlin --environment mega2560
+        
+#        ${{ github.event.inputs.board }}
 
 #    - name: Build PlatformIO Project
 #      run: pio run
