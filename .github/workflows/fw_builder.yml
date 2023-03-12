@@ -10,7 +10,7 @@ on:
     inputs:
       board:
         required: true
-        default: mega2560
+        default: megaatmega2560
         description: Board environment  
       config:
         required: true
