@@ -43,7 +43,7 @@ jobs:
       run: |
         pip install --upgrade platformio
         pio lib --global install olikraus/U8glib@^1.19.1  
-        pio pkg install --global --platform symlink://.        
+#        pio pkg install --global --platform symlink://.        
 
     - name: Clone Marlin source code
       uses: actions/checkout@v3
