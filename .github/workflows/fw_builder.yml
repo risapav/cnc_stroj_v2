@@ -5,6 +5,23 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+    
+  workflow_dispatch:
+    inputs:
+      board:
+        required: true
+        default: mega2560
+        description: Board environment  
+      config:
+        required: true
+        default: Configurations/config/default
+        description: Configuration directory
+      repository:
+        required: true
+        default: MarlinFirmware/Marlin
+        description: Marlin Repository
+      ref:
+        description: Branch / tag / SHA to checkout
 
 permissions:
   contents: read
@@ -27,9 +44,23 @@ jobs:
         pip install --upgrade platformio
         pio lib --global install olikraus/U8glib@^1.19.1  
         pio pkg install --global --platform symlink://.        
-        
-    - name: Build PlatformIO Project
-      run: pio run
+
+    - name: Clone Marlin source code
+      uses: actions/checkout@v3
+      with: 
+        repository: ${{ github.event.inputs.repository }}
+        ref: ${{ github.event.inputs.ref }}
+        path: Marlin
+
+    - name: Pre-compiling configuration
+      run: |
+        cp -r "${{ github.event.inputs.config }}"/* Marlin/Marlin/
+    - name: Compile firmware
+      run: |
+        pio run --project-dir Marlin --environment ${{ github.event.inputs.board }}
+
+#    - name: Build PlatformIO Project
+#      run: pio run
 
 #    env:
 #      MARLIN_VERSION: ${{ matrix.branch }}
