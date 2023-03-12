@@ -52,9 +52,9 @@ jobs:
         ref: ${{ github.event.inputs.ref }}
         path: Marlin
 
-    - name: Pre-compiling configuration
-      run: |
-        cp -r "${{ github.event.inputs.config }}"/* Marlin/Marlin/
+#    - name: Pre-compiling configuration
+#      run: |
+#        cp -r "${{ github.event.inputs.config }}"/* Marlin/Marlin/
         
     - name: Compile firmware
       run: |
@@ -78,40 +78,40 @@ jobs:
 #        - cnc_stroj_v2
         
           
-      - name: Check out MarlinBuilder
-        uses: actions/checkout@v3
+#      - name: Check out MarlinBuilder
+#        uses: actions/checkout@v3
 
-     - name: Check out MarlinFirmware
-       uses: actions/checkout@v3
-       with:
-         repository: MarlinFirmware/Marlin
-         ref: ${{ matrix.branch }}
-         path: Marlin
-         clean: true
-         fetch-depth: 1
+#     - name: Check out MarlinFirmware
+#       uses: actions/checkout@v3
+#       with:
+#         repository: MarlinFirmware/Marlin
+#         ref: ${{ matrix.branch }}
+#         path: Marlin
+#         clean: true
+#         fetch-depth: 1
 
-      - name: Upload src artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.machine }}-${{ matrix.branch }}
-          path: |
-            Marlin_*.zip
+#      - name: Upload src artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ${{ matrix.machine }}-${{ matrix.branch }}
+#          path: |
+#            Marlin_*.zip
           
-      - name: Upload built artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.machine }}-${{ matrix.branch }}
-          path: |
-            firmware*
-            Marlin_*.zip          
+#      - name: Upload built artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ${{ matrix.machine }}-${{ matrix.branch }}
+#          path: |
+#            firmware*
+#            Marlin_*.zip          
           
-      - name: Upload Marlin-${{ matrix.machine }}-${{ matrix.branch }}.zip to release
-        if: ${{ github.event_name == 'release' }}
-          uses: actions/upload-release-asset@v1
-          env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: Marlin-Release.zip
-          asset_name: ${{ matrix.machine }}-${{ matrix.branch }}.zip
-          asset_content_type: application/zip                   
+#      - name: Upload Marlin-${{ matrix.machine }}-${{ matrix.branch }}.zip to release
+#        if: ${{ github.event_name == 'release' }}
+#          uses: actions/upload-release-asset@v1
+#          env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ github.event.release.upload_url }}
+#          asset_path: Marlin-Release.zip
+#          asset_name: ${{ matrix.machine }}-${{ matrix.branch }}.zip
+#          asset_content_type: application/zip                   
