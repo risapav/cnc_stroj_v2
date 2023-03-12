@@ -14,7 +14,7 @@ on:
         description: Board environment  
       config:
         required: true
-        default: Configurations/config/default
+        default: https://github.com/MarlinFirmware/Configurations/config/default
         description: Configuration directory
       repository:
         required: true
@@ -55,6 +55,7 @@ jobs:
     - name: Pre-compiling configuration
       run: |
         cp -r "${{ github.event.inputs.config }}"/* Marlin/Marlin/
+        
     - name: Compile firmware
       run: |
         pio run --project-dir Marlin --environment ${{ github.event.inputs.board }}
