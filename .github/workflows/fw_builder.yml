@@ -89,7 +89,14 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: my-artifact
-        path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar        
+        path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar
+        retention-days: 2
+        
+    - name: Release
+      uses: softprops/action-gh-release@v1  
+      with:
+        files: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar
+      
         
       
 #    - name: Upload src artifact
