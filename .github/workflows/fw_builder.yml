@@ -130,5 +130,5 @@ jobs:
 
     - name: Show files changed
       run: |
-        cat $HOME/files.json
-        ls -la -R
+        ls -la -R  ./
+        ls -la -R  $HOME/
