@@ -147,7 +147,7 @@ jobs:
       with:
         name: ${{ matrix.machine }}-${{ matrix.branch }}
         path: |
-          .pio/**/*.hex
+          *.hex
           firmware*
           Marlin_*.zip          
           
