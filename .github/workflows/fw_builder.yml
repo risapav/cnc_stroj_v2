@@ -95,7 +95,9 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1  
       with:
-        body_path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar
+        if: startsWith(github.ref, 'refs/tags/')
+        files: |
+          ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar
         # note you'll typically need to create a personal access token
         # with permissions to create releases in the other repo
         token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}            
