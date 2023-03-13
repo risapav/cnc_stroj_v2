@@ -34,6 +34,10 @@ jobs:
 
     runs-on: ubuntu-latest
     
+    env:
+      MARLIN_VERSION: ${{ matrix.branch }}
+      CONFIG_NAME: ${{ matrix.machine }}    
+    
     strategy:
       fail-fast: false # Allow all machines to finish building
       matrix:
