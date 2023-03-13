@@ -43,13 +43,9 @@ jobs:
       with:
         repository: MarlinFirmware/Marlin
         path: Marlin 
+        clean: true
     
-#    - name: Clone Marlin source code
-#      uses: actions/checkout@v3
-#      with: 
-#        repository: ${{ github.event.inputs.repository }}
-#        ref: ${{ github.event.inputs.ref }}
-#        path: Marlin    
+ 
     
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
@@ -70,10 +66,6 @@ jobs:
       run: |
         pio run --project-dir Marlin --environment mega2560
         
-#        ${{ github.event.inputs.board }}
-
-#    - name: Build PlatformIO Project
-#      run: pio run
 
 #    env:
 #      MARLIN_VERSION: ${{ matrix.branch }}
@@ -89,33 +81,20 @@ jobs:
 #        machine:
 #        - cnc_stroj_v2
         
+    - name: Upload src artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.machine }}-${{ matrix.branch }}
+        path: |
+          Marlin_*.zip
           
-#      - name: Check out MarlinBuilder
-#        uses: actions/checkout@v3
-
-#     - name: Check out MarlinFirmware
-#       uses: actions/checkout@v3
-#       with:
-#         repository: MarlinFirmware/Marlin
-#         ref: ${{ matrix.branch }}
-#         path: Marlin
-#         clean: true
-#         fetch-depth: 1
-
-#      - name: Upload src artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: ${{ matrix.machine }}-${{ matrix.branch }}
-#          path: |
-#            Marlin_*.zip
-          
-#      - name: Upload built artifact
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: ${{ matrix.machine }}-${{ matrix.branch }}
-#          path: |
-#            firmware*
-#            Marlin_*.zip          
+    - name: Upload built artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.machine }}-${{ matrix.branch }}
+        path: |
+          firmware*
+          Marlin_*.zip          
           
 #      - name: Upload Marlin-${{ matrix.machine }}-${{ matrix.branch }}.zip to release
 #        if: ${{ github.event_name == 'release' }}
