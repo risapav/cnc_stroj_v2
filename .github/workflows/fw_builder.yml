@@ -3,6 +3,8 @@ name: Build cnc_firmware
 on:
   push:
     branches: [ main ]
+    tags:
+      - "v*.*.*"
     paths-ignore:
       - 'MarlinFirmware/**' 
       - 'examples_gcode/**'
@@ -96,7 +98,7 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1  
       with:
-        if: startsWith(github.ref, 'refs/tags/')
+#        if: startsWith(github.ref, 'refs/tags/')
         files: |
           ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar
         # note you'll typically need to create a personal access token
