@@ -127,3 +127,8 @@ jobs:
 #          asset_path: Marlin-Release.zip
 #          asset_name: ${{ matrix.machine }}-${{ matrix.branch }}.zip
 #          asset_content_type: application/zip                   
+
+    - name: Show files changed
+      run: |
+        cat $HOME/files.json
+        ls -la -R
