@@ -83,21 +83,21 @@ jobs:
         pio run --project-dir Marlin --environment mega2560
         
     - name: Tar files
-      run: tar -cvf my_files.tar $HOME
+      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: my-artifact
-        path: my_files.tar        
+        path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar        
         
       
-    - name: Upload src artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ matrix.machine }}-${{ matrix.branch }}
-        path: |
-          Marlin_*.zip        
+#    - name: Upload src artifact
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: ${{ matrix.machine }}-${{ matrix.branch }}
+#        path: |
+#          Marlin_*.zip        
         
 
 #    env:
