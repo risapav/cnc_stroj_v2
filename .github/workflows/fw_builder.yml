@@ -82,10 +82,16 @@ jobs:
       run: |
         pio run --project-dir Marlin --environment mega2560
         
-    - name: Zip up Marlin
-      run: |
-        src/core/zip-marlin
+    - name: Tar files
+      run: tar -cvf my_files.tar $HOME
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: my_files.tar        
         
+      
     - name: Upload src artifact
       uses: actions/upload-artifact@v3
       with:
