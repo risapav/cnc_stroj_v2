@@ -116,7 +116,16 @@ jobs:
         tag_name: ${{ github.ref }}
         body_path: CHANGELOG.md
       env:
-        GITHUB_TOKEN: ${{ github.token }}        
+        GITHUB_TOKEN: ${{ github.token }}    
+        
+#- name: Save state
+#  run: echo "{name}={value}" >> $GITHUB_STATE
+#- name: Set output
+#  run: echo "{name}={value}" >> $GITHUB_OUTPUT
+
+    - name: Tar files
+#      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
+      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip ./
 
         
     - name: upload linux artifact
@@ -125,13 +134,11 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/azblogfilter.linux-amd64.tar.gz
-        asset_name: azblogfilter.linux-amd64.tar.gz
-        asset_content_type: application/gzip        
+        asset_path: ./${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
+        asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
+        asset_content_type: application/zip        
         
-    - name: Tar files
-#      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
-      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip ./
+
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
