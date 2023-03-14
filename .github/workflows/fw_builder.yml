@@ -68,7 +68,6 @@ jobs:
           github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
           '["2.1.2"]') }}
         machine:
-        - cnc_stroj_v2_Ramps
         - default_Ramps      
 
     steps:
@@ -126,8 +125,7 @@ jobs:
     - name: Tar files
 #      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
       run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip ./
-
-        
+       
     - name: upload linux artifact
       uses: actions/upload-release-asset@v1
       env:
@@ -137,38 +135,7 @@ jobs:
         asset_path: ./${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
         asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
         asset_content_type: application/zip        
-        
-
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: my-artifact
-        path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar
-        retention-days: 2
-        
-    - name: Upload Marlin-${{ matrix.machine }}-${{ matrix.branch }}.zip to release
-      if: ${{ github.event_name == 'release' }}
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-#        asset_path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar
-#        asset_name: ${{ matrix.machine }}-${{ matrix.branch }}.zip
-        asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
-        asset_content_type: application/zip   
-        
-    - uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar
-        asset_name: my-artifact.zip
-        asset_content_type: application/zip        
-        
-        
+                        
 #    - name: Release
 #      uses: softprops/action-gh-release@v1  
 #      with:
