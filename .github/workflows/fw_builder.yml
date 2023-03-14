@@ -34,7 +34,7 @@ permissions:
   
 jobs:
   build:
-
+    name: deploy to staging
     runs-on: ubuntu-latest
     
     env:
@@ -160,8 +160,19 @@ jobs:
 #          upload_url: ${{ github.event.release.upload_url }}
 #          asset_path: Marlin-Release.zip
 #          asset_name: ${{ matrix.machine }}-${{ matrix.branch }}.zip
-#          asset_content_type: application/zip                   
+#          asset_content_type: application/zip       
 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar
+        retention-days: 2
+  
     - name: Show files changed
       run: |
         ls -la -R  ./
