@@ -49,6 +49,20 @@ on:
   
   
 jobs:
+
+  Make_GitHub_Release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.step_version.outputs.version }}
+      upload_url: ${{ steps.step_upload_url.outputs.upload_url }}
+      
+      - id: step_version
+        run: echo "::set-output name=version::${{ steps.package_version.outputs.version }}"
+        
+      - id: step_upload_url
+        run: echo "::set-output name=upload_url::${{ steps.create_release.outputs.upload_url }}"      
+
   build:
     permissions:
       contents: write
@@ -110,7 +124,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        upload_url: ${{ github.event.release.upload_url }}
+#        upload_url: ${{ github.event.release.upload_url }}
+        upload_url: ${{ needs.Make_GitHub_Release.outputs.upload_url }}
         asset_path: ./
         asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
         asset_content_type: application/zip        
