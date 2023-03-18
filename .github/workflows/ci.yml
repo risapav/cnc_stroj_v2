@@ -107,9 +107,14 @@ jobs:
       run: |
         pio run --project-dir Marlin --environment mega2560
 
+    - name: Add artifacts to publish to the temp folder
+      run: |
+        mkdir downloads
+        cp .pio/firmware.* downloads/
+
     - name: Tar files
 #      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
-      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip -i ./.pio/*   
+      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip -i downloads
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
