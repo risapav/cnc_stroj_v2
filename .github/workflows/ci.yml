@@ -85,6 +85,11 @@ jobs:
         path: Marlin 
         clean: true
 #        fetch-depth: 1
+
+    - name: Show files changed
+      run: |
+        ls -la ./
+        ls -la $HOME/
   
     - name: Select Python 3.10
       uses: actions/setup-python@v4
