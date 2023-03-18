@@ -125,7 +125,15 @@ jobs:
           ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip     
           *.hex
           firmware*             
-       
+
+    - name: Show files changed
+      run: |
+        echo ${{ steps.upload_artifacts.outputs.upload_url }}
+        echo ${{ github.ref }}
+        echo ${{ secrets.GITHUB_TOKEN }}
+        echo ${{ github.token }}
+
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -137,9 +145,7 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Show files changed
-      run: |
-        echo ${{ steps.upload_artifacts.outputs.upload_url }}
+
 
     - name: upload linux artifact
       uses: actions/upload-release-asset@v1
