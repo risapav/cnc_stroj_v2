@@ -110,6 +110,7 @@ jobs:
     - name: Add artifacts to publish to the temp folder
       run: |
         mkdir -p downloads/pio
+        ls -la
         cp -a .pio/. downloads/
 #        cp -r .pio downloads
 
