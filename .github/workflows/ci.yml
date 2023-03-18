@@ -137,6 +137,10 @@ jobs:
         draft: false
         prerelease: false
 
+    - name: Show files changed
+      run: |
+        echo ${{ steps.upload_artifacts.outputs.upload_url }}
+
     - name: upload linux artifact
       uses: actions/upload-release-asset@v1
       env:
