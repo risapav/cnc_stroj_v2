@@ -112,11 +112,12 @@ jobs:
         mkdir -p downloads/pio
         ls -la
         cp -a Marlin/.pio/. downloads/
-#        cp -r .pio downloads
+        ls -la -R downloads
+
 
     - name: Tar files
 #      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
-      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip -i downloads
+      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip -i downloads/
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
