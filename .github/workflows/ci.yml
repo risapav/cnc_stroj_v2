@@ -51,6 +51,9 @@ on:
 jobs:
 
   build:
+
+    runs-on: ubuntu-latest
+    
     permissions:
       contents: write
       
@@ -150,12 +153,12 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: my-artifact
-        path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
-        retention-days: 2
+    # - name: Upload Artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: my-artifact
+    #     path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
+    #     retention-days: 2
   
     - name: Show files changed
       run: |
