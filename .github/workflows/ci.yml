@@ -107,14 +107,17 @@ jobs:
       run: |
         pio run --project-dir Marlin --environment mega2560
 
+    - name: Tar files
+#      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
+      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip ./
+
     - name: Show files changed
       run: |
         ls -la ./
         ls -la $HOME/
-        
-    - name: Tar files
-#      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
-      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip ./
+        echo ${{ github.event.release.upload_url }}
+        echo ${{ needs.Make_GitHub_Release.outputs.upload_url }}
+              
        
     - name: upload linux artifact
       uses: actions/upload-release-asset@v1
