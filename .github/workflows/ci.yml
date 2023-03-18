@@ -77,7 +77,7 @@ jobs:
       uses: actions/checkout@v3
     
     # Cloning repository to the runner:
-    - name: Check out MarlinFirmware
+    - name: Checkout MarlinFirmware
       uses: actions/checkout@v3
       with:
         repository: MarlinFirmware/Marlin
@@ -85,12 +85,8 @@ jobs:
         path: Marlin 
         clean: true
 #        fetch-depth: 1
-
-    - name: Show files changed
-      run: |
-        ls -la ./
-        ls -la $HOME/
   
+    # Install Python
     - name: Select Python 3.10
       uses: actions/setup-python@v4
       with:
@@ -103,10 +99,12 @@ jobs:
         pio lib --global install olikraus/U8glib@^1.19.1  
 #        pio pkg install --global --platform symlink://.        
 
+    # Compile firmware
     - name: Compile firmware
       run: |
         pio run --project-dir Marlin --environment mega2560
 
+    # Prepare assets
     - name: Add artifacts to publish to the temp folder
       run: |
         mkdir -p downloads/pio
@@ -114,10 +112,9 @@ jobs:
         cp -a Marlin/.pio/. downloads/
         ls -la -R downloads
 
-
-    - name: Tar files
-#      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
+    - name: Zip files
       run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip downloads
+
 
     - name: Upload artifact for deployment job
       id: upload_artifacts
@@ -134,7 +131,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-        upload_url: ${{ steps.upload_artifacts.outputs.upload_url }} 
+#        upload_url: ${{ steps.upload_artifacts.outputs.upload_url }} 
         asset_path: ./${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
         asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
         asset_content_type: application/zip        
