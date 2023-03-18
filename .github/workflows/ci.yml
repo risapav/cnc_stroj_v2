@@ -110,7 +110,7 @@ jobs:
     - name: Add artifacts to publish to the temp folder
       run: |
         mkdir downloads
-        cp .pio/firmware.* downloads/
+        cp .pio/build/*  downloads/
 
     - name: Tar files
 #      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
