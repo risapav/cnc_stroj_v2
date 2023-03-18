@@ -111,7 +111,7 @@ jobs:
       run: |
         mkdir -p downloads/pio
         ls -la
-        cp -a .pio/. downloads/
+        cp -a Marlin/.pio/. downloads/
 #        cp -r .pio downloads
 
     - name: Tar files
