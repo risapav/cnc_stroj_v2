@@ -57,9 +57,6 @@ jobs:
     permissions:
       contents: write
       
-    name: deploy to staging
-    runs-on: ubuntu-latest
-    
     env:
       MARLIN_VERSION: ${{ matrix.branch }}
       CONFIG_NAME: ${{ matrix.machine }}    
