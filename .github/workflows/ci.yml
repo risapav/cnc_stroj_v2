@@ -117,7 +117,7 @@ jobs:
 
     - name: Tar files
 #      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
-      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip -i downloads/
+      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip -i downloads/*
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
