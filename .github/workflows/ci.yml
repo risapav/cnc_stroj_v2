@@ -110,7 +110,6 @@ jobs:
     - name: Add artifacts to publish to the temp folder
       run: |
         mkdir downloads
-        cp ./*  downloads/
         cp -r .pio/build downloads
 
     - name: Tar files
