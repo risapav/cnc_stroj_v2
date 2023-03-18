@@ -120,44 +120,24 @@ jobs:
       run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip downloads
 
     - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
+      id: upload_artifacts
+      uses: actions/upload-artifact@v3
       with:
-        name: fw-app
+        name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact
         path: |
           ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip     
           *.hex
-          firmware*
-
-    - name: Show files changed
-      run: |
-        ls -la ./
-        ls -la $HOME/
-        echo ${{ github.event.release.upload_url }}
-        echo ${{ needs.Make_GitHub_Release.outputs.upload_url }}
-              
+          firmware*             
        
     - name: upload linux artifact
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ github.token }}
       with:
-#        upload_url: ${{ github.event.release.upload_url }}
-        upload_url: ${{ needs.Make_GitHub_Release.outputs.upload_url }}
-        asset_path: ./
+        upload_url: ${{ steps.upload_artifacts.outputs.upload_url }} 
+        asset_path: ./${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
         asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
         asset_content_type: application/zip        
-                        
-          
-#      - name: Upload Marlin-${{ matrix.machine }}-${{ matrix.branch }}.zip to release
-#        if: ${{ github.event_name == 'release' }}
-#          uses: actions/upload-release-asset@v1
-#          env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ github.event.release.upload_url }}
-#          asset_path: Marlin-Release.zip
-#          asset_name: ${{ matrix.machine }}-${{ matrix.branch }}.zip
-#          asset_content_type: application/zip       
 
   release:
     needs: build
