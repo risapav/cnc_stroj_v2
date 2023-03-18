@@ -107,6 +107,11 @@ jobs:
       run: |
         pio run --project-dir Marlin --environment mega2560
 
+    - name: Show files changed
+      run: |
+        ls -la ./
+        ls -la $HOME/
+        
     - name: Tar files
 #      run: tar -cvf ${{ matrix.machine }}-${{ matrix.branch }}_artifact.tar ./
       run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip ./
