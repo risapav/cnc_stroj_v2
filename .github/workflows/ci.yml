@@ -128,6 +128,7 @@ jobs:
 
     - name: Show files changed
       run: |
+        echo ${{ steps.step_id.outputs.url_output }}
         echo ${{ steps.upload_artifacts.outputs.upload_url }}
         echo ${{ github.ref }}
         echo ${{ secrets.GITHUB_TOKEN }}
