@@ -17,6 +17,14 @@ on:
 
   workflow_dispatch:  
     inputs:
+      branch:
+        ${{ fromJson(
+          github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
+          github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
+          '["2.1.2"]') }}      
+      machine: |
+        ramps14
+        ramps_16   
       board:
         required: true
         default: mega2560
@@ -58,13 +66,8 @@ jobs:
     strategy:
       fail-fast: false # Allow all machines to finish building
       matrix:
-        branch: ${{ fromJson(
-          github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
-          github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
-          '["2.1.2"]') }}
-        machine:
-        - ramps14
-        - ramps_16   
+        branch: ${{ github.event.inputs.branch }}
+        machine: ${{ github.event.inputs.machine }}
 
     name: "Run unit tests"
     defaults:
@@ -88,13 +91,8 @@ jobs:
     strategy:
       fail-fast: false # Allow all machines to finish building
       matrix:
-        branch: ${{ fromJson(
-          github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
-          github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
-          '["2.1.2"]') }}
-        machine:
-        - ramps14
-        - ramps_16   
+        branch: ${{ github.event.inputs.branch }}
+        machine: ${{ github.event.inputs.machine }} 
 
 
     name: 'Build firmware'
@@ -172,6 +170,18 @@ jobs:
           echo "pokus"
 
   deploy:
+
+    env:
+      MARLIN_VERSION: ${{ matrix.branch }}
+      CONFIG_NAME: ${{ matrix.machine }}
+      V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
+
+    strategy:
+      fail-fast: false # Allow all machines to finish building
+      matrix:
+        branch: ${{ github.event.inputs.branch }}
+        machine: ${{ github.event.inputs.machine }} 
+
     name: Release firmware
     needs: build
     defaults:
@@ -222,7 +232,6 @@ jobs:
           ls -la    
           echo "pokus"
     
-  
       - name: Show files changed
         run: |
           ls -la -R  ./
