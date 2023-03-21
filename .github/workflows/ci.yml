@@ -47,16 +47,14 @@ on:
 #  security-events: read|write|none
 #  statuses: read|write|none
 
-strategy:
-  fail-fast: false # Allow all machines to finish building
-  matrix:
-    branch: ${{ fromJson(
-      github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
-      github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
-      '["2.1.2"]') }}
-    machine:
-    - ramps14
-    - ramps_16
+matrix:
+  branch: ${{ fromJson(
+    github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
+    github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
+    '["2.1.2"]') }}
+  machine:
+  - ramps14
+  - ramps_16
 
 jobs:
   test:
@@ -96,6 +94,8 @@ jobs:
       CONFIG_NAME: ${{ matrix.machine }}
       V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
 
+    strategy:
+      fail-fast: false # Allow all machines to finish building
 
 
     name: 'Build firmware'
