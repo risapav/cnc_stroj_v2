@@ -47,6 +47,17 @@ on:
 #  security-events: read|write|none
 #  statuses: read|write|none
 
+strategy:
+  fail-fast: false # Allow all machines to finish building
+  matrix:
+    branch: ${{ fromJson(
+      github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
+      github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
+      '["2.1.2"]') }}
+    machine:
+    - ramps14
+    - ramps_16
+
 jobs:
   test:
 
@@ -85,16 +96,7 @@ jobs:
       CONFIG_NAME: ${{ matrix.machine }}
       V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
 
-    strategy:
-      fail-fast: false # Allow all machines to finish building
-      matrix:
-        branch: ${{ fromJson(
-          github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
-          github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
-          '["2.1.2"]') }}
-        machine:
-        - ramps14
-        - ramps_16
+
 
     name: 'Build firmware'
     needs: test
@@ -102,19 +104,17 @@ jobs:
       run:
         shell: bash
     runs-on: ubuntu-latest
-    
-
-        
+           
     steps:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
-        name: 'Checkout source repository'
+        name: Checkout source repository
         with:
           path: ${{ matrix.machine }}/**
         
       # Cloning repository to the runner:
       - uses: actions/checkout@v3
-        name: 'Checkout MarlinFirmware'
+        name: Checkout MarlinFirmware
         with:
           repository: MarlinFirmware/Marlin
           ref: ${{ matrix.branch }}
@@ -124,23 +124,30 @@ jobs:
     
       # Install Python
       - uses: actions/setup-python@v4
-        name: 'Select Python 3.10'
+        name: Select Python 3.10
         with:
           python-version: '3.10' # Version range or exact version of a Python version to use, using semvers version range syntax.
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified      
       # Install PlatformIO Core    
-      - name: 'Install PlatformIO Core'
+      - name: Install PlatformIO Core
         run: |
           pip install --upgrade platformio
           pio lib --global install olikraus/U8glib@^1.19.1       
 
+      # Copy config files Marlin folder
+      - name: Copy configuration
+        run: |
+          ls -la MarlinFirmware/Marlin/
+          cp -a ${{ matrix.machine }}/** MarlinFirmware/Marlin/
+          ls -la MarlinFirmware/Marlin/
+
       # Compile firmware
-      - name: 'Compile firmware'
+      - name: Compile firmware
         run: |
           pio run --project-dir Marlin --environment mega2560
 
       # Prepare assets
-      - name: 'Add artifacts to publish to the temp folder'
+      - name: Add artifacts to publish to the temp folder
         run: |
           mkdir -p downloads/pio
           ls -la
