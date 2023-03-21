@@ -41,8 +41,6 @@ on:
         description: Marlin Repository
       ref:
         description: Branch / tag / SHA to checkout
-
-
   
 #permissions:
 #  actions: read|write|none
@@ -83,10 +81,7 @@ jobs:
       run:
         shell: bash
     runs-on: ubuntu-latest
-    
-    permissions:
-      contents: write
-      
+         
     env:
       MARLIN_VERSION: ${{ matrix.branch }}
       CONFIG_NAME: ${{ matrix.machine }}    
@@ -161,27 +156,25 @@ jobs:
         run: |
           ls -la
 
+#     - name: Show files changed
+#       run: |
+#         echo ${{ steps.step_id.outputs.url_output }}
+#         echo ${{ steps.upload_artifacts.outputs.upload_url }}
+#         echo ${{ github.ref }}
+#         echo ${{ secrets.GITHUB_TOKEN }}
+#         echo ${{ github.token }}
 
 
- #     - name: Show files changed
- #       run: |
- #         echo ${{ steps.step_id.outputs.url_output }}
- #         echo ${{ steps.upload_artifacts.outputs.upload_url }}
- #         echo ${{ github.ref }}
- #         echo ${{ secrets.GITHUB_TOKEN }}
- #         echo ${{ github.token }}
-
-
-    # - name: Create Release
-    #   id: create_release
-    #   uses: actions/create-release@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     tag_name: ${{ github.ref }}
-    #     release_name: Release ${{ github.ref }}
-    #     draft: false
-    #     prerelease: false
+# - name: Create Release
+#   id: create_release
+#   uses: actions/create-release@v1
+#   env:
+#     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#   with:
+#     tag_name: ${{ github.ref }}
+#     release_name: Release ${{ github.ref }}
+#     draft: false
+#     prerelease: false
 
 #      - name: upload linux artifact
 #        uses: actions/upload-release-asset@v1
@@ -201,6 +194,9 @@ jobs:
         shell: bash    
     runs-on: ubuntu-latest
     
+    permissions:
+      contents: write    
+      
     steps:
       - name: "Downloads artifact for deployment job"
         id: download_artifacts
