@@ -47,24 +47,25 @@ on:
 #  security-events: read|write|none
 #  statuses: read|write|none
 
-env:
-  MARLIN_VERSION: ${{ matrix.branch }}
-  CONFIG_NAME: ${{ matrix.machine }}
-  V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
-
-strategy:
-  fail-fast: false # Allow all machines to finish building
-  matrix:
-    branch: ${{ fromJson(
-      github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
-      github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
-      '["2.1.2"]') }}
-    machine:
-    - ramps14
-    - ramps_16   
-
 jobs:
   test:
+
+    env:
+      MARLIN_VERSION: ${{ matrix.branch }}
+      CONFIG_NAME: ${{ matrix.machine }}
+      V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
+
+    strategy:
+      fail-fast: false # Allow all machines to finish building
+      matrix:
+        branch: ${{ fromJson(
+          github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
+          github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
+          '["2.1.2"]') }}
+        machine:
+        - ramps14
+        - ramps_16   
+
     name: "Run unit tests"
     defaults:
       run:
@@ -78,6 +79,23 @@ jobs:
           path: ${{ matrix.machine }}/**        
 
   build:
+
+    env:
+      MARLIN_VERSION: ${{ matrix.branch }}
+      CONFIG_NAME: ${{ matrix.machine }}
+      V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
+
+    strategy:
+      fail-fast: false # Allow all machines to finish building
+      matrix:
+        branch: ${{ fromJson(
+          github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
+          github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
+          '["2.1.2"]') }}
+        machine:
+        - ramps14
+        - ramps_16
+
     name: 'Build firmware'
     needs: test
     defaults:
