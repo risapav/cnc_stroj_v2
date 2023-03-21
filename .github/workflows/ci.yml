@@ -2,17 +2,24 @@ name: Build cnc_firmware
 
 on:
 #  push:
-#    branches: [ main ]
+#    branches:
+#      -main
+#    paths:
+#      - "Configurations/**"
 #    tags:
 #      - "v*.*.*"
 #    paths-ignore:
 #      - 'MarlinFirmware/**' 
 #      - 'examples_gcode/**'
 #  pull_request:
-#    branches: [ main ]
-    
-    
+#    branches:
+#      -main
+#    paths:
+#      - "Configurations/**"
+
   workflow_dispatch:
+    paths:
+      - "Configurations/**"  
     inputs:
       board:
         required: true
