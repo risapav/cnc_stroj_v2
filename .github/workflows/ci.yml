@@ -35,7 +35,7 @@ on:
         required: true
         default: https://github.com/MarlinFirmware/Configurations/config/default
         description: Configuration directory
-      repository:
+      repository_1:
         required: true
         default: MarlinFirmware/Marlin
         description: Marlin Repository
