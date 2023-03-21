@@ -17,9 +17,7 @@ on:
 #    paths:
 #      - "Configurations/**"
 
-  workflow_dispatch:
-    paths:
-      - "Configurations/**"  
+  workflow_dispatch:  
     inputs:
       token:
         default: ${{ github.token }}
