@@ -52,9 +52,23 @@ defaults:
 #    working-directory: ./build
   
 jobs:
+  test:
+    name: "Run unit tests"
+    defaults:
+      run:
+        shell: bash
+    runs-on: ubuntu-latest
+    steps:
+    # Cloning my repository to the runner:  
+      - uses: actions/checkout@v3  
+        name: "Checkout source repository"
 
   build:
-
+    name: "Build firmware"
+    needs: test
+    defaults:
+      run:
+        shell: bash
     runs-on: ubuntu-latest
     
     permissions:
@@ -72,70 +86,67 @@ jobs:
           github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
           '["2.1.2"]') }}
         machine:
-        - default_Ramps      
-
+        - default_Ramps 
+        
     steps:
-    # Cloning my repository to the runner:
-    - name: Checkout source repository
-      uses: actions/checkout@v3
+      # Cloning my repository to the runner:  
+      - uses: actions/checkout@v3  
+        name: "Checkout source repository"
+        
+      # Cloning repository to the runner:
+      - uses: actions/checkout@v3
+        name: "Checkout MarlinFirmware"
+        with:
+          repository: MarlinFirmware/Marlin
+          ref: ${{ matrix.branch }}
+          path: Marlin 
+          clean: true
+#           fetch-depth: 1
     
-    # Cloning repository to the runner:
-    - name: Checkout MarlinFirmware
-      uses: actions/checkout@v3
-      with:
-        repository: MarlinFirmware/Marlin
-        ref: ${{ matrix.branch }}
-        path: Marlin 
-        clean: true
-#        fetch-depth: 1
-  
-    # Install Python
-    - name: Select Python 3.10
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10' # Version range or exact version of a Python version to use, using semvers version range syntax.
-        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified      
- 
-    - name: Install PlatformIO Core
-      run: |
-        pip install --upgrade platformio
-        pio lib --global install olikraus/U8glib@^1.19.1  
-#        pio pkg install --global --platform symlink://.        
+      # Install Python
+      - uses: actions/setup-python@v4
+        name: "Select Python 3.10"
+        with:
+          python-version: '3.10' # Version range or exact version of a Python version to use, using semvers version range syntax.
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified      
+      # Install PlatformIO Core    
+      - name: "Install PlatformIO Core"
+        run: |
+          pip install --upgrade platformio
+          pio lib --global install olikraus/U8glib@^1.19.1  
+#          pio pkg install --global --platform symlink://.        
 
-    # Compile firmware
-    - name: Compile firmware
-      run: |
-        pio run --project-dir Marlin --environment mega2560
+      # Compile firmware
+      - name: "Compile firmware"
+        run: |
+          pio run --project-dir Marlin --environment mega2560
 
-    # Prepare assets
-    - name: Add artifacts to publish to the temp folder
-      run: |
-        mkdir -p downloads/pio
-        ls -la
-        cp -a Marlin/.pio/. downloads/
-        ls -la -R downloads
+      # Prepare assets
+      - name: "Add artifacts to publish to the temp folder"
+        run: |
+          mkdir -p downloads/pio
+          ls -la
+          cp -a Marlin/.pio/. downloads/
+          ls -la -R downloads
+      - name: "Zip files"
+        run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip downloads
+      - name: Upload artifact for deployment job
+        id: upload_artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact
+          path: |
+            ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip     
+            *.hex
+            firmware*             
 
-    - name: Zip files
-      run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip downloads
-
-
-    - name: Upload artifact for deployment job
-      id: upload_artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact
-        path: |
-          ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip     
-          *.hex
-          firmware*             
-
-    - name: Show files changed
-      run: |
-        echo ${{ steps.step_id.outputs.url_output }}
-        echo ${{ steps.upload_artifacts.outputs.upload_url }}
-        echo ${{ github.ref }}
-        echo ${{ secrets.GITHUB_TOKEN }}
-        echo ${{ github.token }}
+      - name: Show files changed
+        run: |
+          echo ${{ steps.step_id.outputs.url_output }}
+          echo ${{ steps.upload_artifacts.outputs.upload_url }}
+          echo ${{ github.ref }}
+          echo ${{ secrets.GITHUB_TOKEN }}
+          echo ${{ github.token }}
 
 
     # - name: Create Release
@@ -151,15 +162,15 @@ jobs:
 
 
 
-    - name: upload linux artifact
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-#        upload_url: ${{ steps.upload_artifacts.outputs.upload_url }} 
-        asset_path: ./${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
-        asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
-        asset_content_type: application/zip        
+      - name: upload linux artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+#         upload_url: ${{ steps.upload_artifacts.outputs.upload_url }} 
+          asset_path: ./${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
+          asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
+          asset_content_type: application/zip        
 
   release:
     needs: build
