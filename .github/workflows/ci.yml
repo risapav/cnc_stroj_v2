@@ -139,11 +139,13 @@ jobs:
         id: upload_artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact
-          path: |
+          name: firmware.zip
+        #   name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact
+          parh: |        
             ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip     
             *.hex
             firmware*  
+
             
       - name: 'list folder'
         run: |
