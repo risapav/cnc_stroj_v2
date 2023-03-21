@@ -17,12 +17,6 @@ on:
 
   workflow_dispatch:  
     inputs:
-      branch: "2.1.2"
-        # ${{ fromJson(
-        #   github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
-        #   github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
-        #   '["2.1.2"]') }}      
-      machine: ramps14
       board:
         required: true
         default: mega2560
@@ -53,8 +47,42 @@ on:
 #  security-events: read|write|none
 #  statuses: read|write|none
 
+# env:
+#   branch: "2.1.2"
+#     # ${{ fromJson(
+#     #   github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
+#     #   github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
+#     #   '["2.1.2"]') }}      
+#   machine: ramps14
+
 jobs:
+  matrix:
+    name: Generate test matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix-json: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-matrix
+        shell: bash
+        # Use a small PowerShell script to generate the test matrix
+        #run: "& .github/workflows/create-test-matrix.ps1"
+        run: |
+          echo "::set-output name=matrix::[
+            \"branch\": \"2.1.2\",
+            \"machine\": [\"ramps14\", \"ramps_16\"],
+            {
+              \"go\":\"1.13\",
+              \"commit\":\"v1.0.0\"
+            },
+            {
+              \"go\":\"1.14\",
+              \"commit\":\"v1.2.0\"
+            }]"
+
   test:
+    name: "Run unit tests"
+    needs: [matrix]
 
     env:
       MARLIN_VERSION: ${{ matrix.branch }}
@@ -62,12 +90,10 @@ jobs:
       V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
 
     strategy:
-      fail-fast: false # Allow all machines to finish building
+      fail-fast: false
       matrix:
-        branch: ${{ inputs.branch }}
-        machine: ${{ inputs.machine }}
-
-    name: "Run unit tests"
+        include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+  
     defaults:
       run:
         shell: bash
@@ -80,6 +106,9 @@ jobs:
           path: ${{ matrix.machine }}/**        
 
   build:
+    name: 'Build firmware'
+    needs: test  
+    needs: [matrix, test]
 
     env:
       MARLIN_VERSION: ${{ matrix.branch }}
@@ -87,14 +116,10 @@ jobs:
       V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
 
     strategy:
-      fail-fast: false # Allow all machines to finish building
+      fail-fast: false
       matrix:
-        branch: ${{ inputs.branch }}
-        machine: ${{ inputs.machine }}
+        include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
 
-
-    name: 'Build firmware'
-    needs: test
     defaults:
       run:
         shell: bash
@@ -168,6 +193,8 @@ jobs:
           echo "pokus"
 
   deploy:
+    name: Release firmware
+    needs: [matrix, build]
 
     env:
       MARLIN_VERSION: ${{ matrix.branch }}
@@ -175,13 +202,10 @@ jobs:
       V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
 
     strategy:
-      fail-fast: false # Allow all machines to finish building
+      fail-fast: false
       matrix:
-        branch: ${{ inputs.branch }}
-        machine: ${{ inputs.machine }}
+        include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
 
-    name: Release firmware
-    needs: build
     defaults:
       run:
         shell: bash    
