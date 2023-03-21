@@ -181,31 +181,44 @@ jobs:
 #          asset_content_type: application/zip 
 
   deploy:
-    name: 'Release firmware'
+    name: Release firmware
     needs: build
     defaults:
       run:
         shell: bash    
     runs-on: ubuntu-latest
     
-    permissions:
-      contents: write    
+ #   permissions:
+ #     contents: write    
       
     steps:
-      - name: 'Downloads artifact for deployment job'
-        id: download_artifacts
+      - name: Downloads artifact
         uses: actions/download-artifact@v3
+        with:
+          name: firmware.zip
+      - name: Create Github release
+        id: create-new-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+        with:
+          upload_url: ${{ steps.create-new-release.outputs.upload_url }}
+          asset_path: ./firmware.zip
+          asset_name: firmware-v${{ github.run_number }}.zip
+          asset_content_type: application/zip
+
       - name: "list folder"
         run: |
           ls -la    
           echo "pokus"
     
-    # - name: Upload Artifact
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: my-artifact
-    #     path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
-    #     retention-days: 2
   
       - name: Show files changed
         run: |
