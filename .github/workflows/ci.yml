@@ -106,8 +106,7 @@ jobs:
           path: ${{ matrix.machine }}/**        
 
   build:
-    name: 'Build firmware'
-    needs: test  
+    name: Build firmware
     needs: [matrix, test]
 
     env:
