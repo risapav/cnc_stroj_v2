@@ -198,6 +198,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: firmware.zip
+
+      - name: "list folder"
+        run: |
+          ls -la    
+          echo "pokus" 
+
       - name: Create Github release
         id: create-new-release
         uses: actions/create-release@v1
@@ -206,13 +212,19 @@ jobs:
         with:
           tag_name: ${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
+
+      - name: "list folder"
+        run: |
+          ls -la    
+          echo "pokus"
+
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-          asset_path: ./firmware.zip
+          asset_path: firmware.zip
           asset_name: firmware-v${{ github.run_number }}.zip
           asset_content_type: application/zip
 
