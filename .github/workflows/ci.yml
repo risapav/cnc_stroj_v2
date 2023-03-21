@@ -17,8 +17,8 @@ on:
 
   workflow_dispatch:  
     inputs:
-      token:
-        default: ${{ github.token }}
+#      token:
+#        default: ${{ github.token }}
       repository:
         default: ${{ github.repository }}
       actor:
