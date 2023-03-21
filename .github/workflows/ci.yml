@@ -21,6 +21,12 @@ on:
     paths:
       - "Configurations/**"  
     inputs:
+      token:
+        default: ${{ github.token }}
+      repository:
+        default: ${{ github.repository }}
+      actor:
+        default: ${{ github.actor }}
       board:
         required: true
         default: mega2560
@@ -99,6 +105,11 @@ jobs:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: "Checkout source repository"
+        with:
+          repository: ${{ inputs.repository }}
+          token: ${{ inputs.token }}
+          path: 
+            - "Configurations/**"
         
       # Cloning repository to the runner:
       - uses: actions/checkout@v3
@@ -120,8 +131,7 @@ jobs:
       - name: "Install PlatformIO Core"
         run: |
           pip install --upgrade platformio
-          pio lib --global install olikraus/U8glib@^1.19.1  
-#          pio pkg install --global --platform symlink://.        
+          pio lib --global install olikraus/U8glib@^1.19.1       
 
       # Compile firmware
       - name: "Compile firmware"
@@ -137,7 +147,7 @@ jobs:
           ls -la -R downloads
       - name: "Zip files"
         run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip downloads
-      - name: Upload artifact for deployment job
+      - name: "Upload artifact for deployment job"
         id: upload_artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -145,15 +155,20 @@ jobs:
           path: |
             ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip     
             *.hex
-            firmware*             
-
-      - name: Show files changed
+            firmware*  
+      - name: "list folder"
         run: |
-          echo ${{ steps.step_id.outputs.url_output }}
-          echo ${{ steps.upload_artifacts.outputs.upload_url }}
-          echo ${{ github.ref }}
-          echo ${{ secrets.GITHUB_TOKEN }}
-          echo ${{ github.token }}
+          ls -la
+
+
+
+ #     - name: Show files changed
+ #       run: |
+ #         echo ${{ steps.step_id.outputs.url_output }}
+ #         echo ${{ steps.upload_artifacts.outputs.upload_url }}
+ #         echo ${{ github.ref }}
+ #         echo ${{ secrets.GITHUB_TOKEN }}
+ #         echo ${{ github.token }}
 
 
     # - name: Create Release
@@ -169,20 +184,27 @@ jobs:
 
 
 
-      - name: upload linux artifact
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
+#      - name: upload linux artifact
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+#        with:
 #         upload_url: ${{ steps.upload_artifacts.outputs.upload_url }} 
-          asset_path: ./${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
-          asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
-          asset_content_type: application/zip        
+#          asset_path: ./${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
+#          asset_name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
+#          asset_content_type: application/zip        
 
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: "Downloads artifact for deployment job"
+        id: download_artifacts
+        uses: actions/download-artifact@v3
+      - name: "list folder"
+        run: |
+          ls -la    
+    
     # - name: Upload Artifact
     #   uses: actions/upload-artifact@v3
     #   with:
