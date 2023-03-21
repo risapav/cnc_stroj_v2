@@ -17,11 +17,11 @@ on:
 
   workflow_dispatch:  
     inputs:
-      branch:
-        ${{ fromJson(
-          github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
-          github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
-          '["2.1.2"]') }}      
+      branch: "2.1.2"
+        # ${{ fromJson(
+        #   github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
+        #   github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
+        #   '["2.1.2"]') }}      
       machine: |
         ramps14
         ramps_16   
