@@ -70,6 +70,8 @@ jobs:
           $jsonArrayString = "[`"test1:test2:test3`",`"test4:test5:test6`"]"
           echo "JSON_ARRAY=${jsonArrayString}" >> $GITHUB_OUTPUT
           echo "$GITHUB_OUTPUT"
+          set
+          env
 
     outputs:
       JSON_ARRAY: ${{ steps.matrix_json_step.outputs.JSON_ARRAY }}
