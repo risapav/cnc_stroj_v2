@@ -47,15 +47,6 @@ on:
 #  security-events: read|write|none
 #  statuses: read|write|none
 
-matrix:
-  branch: ${{ fromJson(
-    github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
-    github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
-    '["2.1.2"]') }}
-  machine:
-  - ramps14
-  - ramps_16
-
 jobs:
   test:
 
