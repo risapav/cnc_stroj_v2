@@ -4,18 +4,16 @@ on:
 #  push:
 #    branches:
 #      -main
-#    paths:
-#      - "Configurations/**"
+#    paths: Configurations/**
 #    tags:
 #      - "v*.*.*"
-#    paths-ignore:
-#      - 'MarlinFirmware/**' 
-#      - 'examples_gcode/**'
+#    paths-ignore: |
+#      MarlinFirmware/**
+#      examples_gcode/**
 #  pull_request:
 #    branches:
 #      -main
-#    paths:
-#      - "Configurations/**"
+#    paths: Configurations/**
 
   workflow_dispatch:  
     inputs:
@@ -73,7 +71,7 @@ jobs:
         name: "Checkout source repository"
 
   build:
-    name: "Build firmware"
+    name: 'Build firmware'
     needs: test
     defaults:
       run:
@@ -97,16 +95,15 @@ jobs:
     steps:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
-        name: "Checkout source repository"
+        name: 'Checkout source repository'
         with:
           repository: ${{ inputs.repository }}
           token: ${{ inputs.token }}
-          path: 
-            - "Configurations/**"
+          path: Configurations/**
         
       # Cloning repository to the runner:
       - uses: actions/checkout@v3
-        name: "Checkout MarlinFirmware"
+        name: 'Checkout MarlinFirmware'
         with:
           repository: MarlinFirmware/Marlin
           ref: ${{ matrix.branch }}
@@ -116,31 +113,31 @@ jobs:
     
       # Install Python
       - uses: actions/setup-python@v4
-        name: "Select Python 3.10"
+        name: 'Select Python 3.10'
         with:
           python-version: '3.10' # Version range or exact version of a Python version to use, using semvers version range syntax.
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified      
       # Install PlatformIO Core    
-      - name: "Install PlatformIO Core"
+      - name: 'Install PlatformIO Core'
         run: |
           pip install --upgrade platformio
           pio lib --global install olikraus/U8glib@^1.19.1       
 
       # Compile firmware
-      - name: "Compile firmware"
+      - name: 'Compile firmware'
         run: |
           pio run --project-dir Marlin --environment mega2560
 
       # Prepare assets
-      - name: "Add artifacts to publish to the temp folder"
+      - name: 'Add artifacts to publish to the temp folder'
         run: |
           mkdir -p downloads/pio
           ls -la
           cp -a Marlin/.pio/. downloads/
           ls -la -R downloads
-      - name: "Zip files"
+      - name: 'Zip files'
         run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip downloads
-      - name: "Upload artifact for deployment job"
+      - name: 'Upload artifact for deployment job'
         id: upload_artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -150,7 +147,7 @@ jobs:
             *.hex
             firmware*  
             
-      - name: "list folder"
+      - name: 'list folder'
         run: |
           ls -la
           echo "pokus"
@@ -186,7 +183,7 @@ jobs:
 #          asset_content_type: application/zip 
 
   deploy:
-    name: "Release firmware"
+    name: 'Release firmware'
     needs: build
     defaults:
       run:
@@ -197,7 +194,7 @@ jobs:
       contents: write    
       
     steps:
-      - name: "Downloads artifact for deployment job"
+      - name: 'Downloads artifact for deployment job'
         id: download_artifacts
         uses: actions/download-artifact@v3
       - name: "list folder"
