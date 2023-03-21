@@ -46,7 +46,10 @@ on:
 #  security-events: read|write|none
 #  statuses: read|write|none
   
-  
+defaults:
+  run:
+    shell: bash
+    working-directory: ./build
   
 jobs:
 
