@@ -65,20 +65,29 @@ jobs:
       - uses: actions/checkout@v3
       - id: set-matrix
         shell: bash
-        # Use a small PowerShell script to generate the test matrix
-        #run: "& .github/workflows/create-test-matrix.ps1"
+        shell: pwsh
         run: |
-          echo "::set-output name=matrix::[
-            \"branch\": \"2.1.2\",
-            \"machine\": [\"ramps14\", \"ramps_16\"],
-            {
-              \"go\":\"1.13\",
-              \"commit\":\"v1.0.0\"
-            },
-            {
-              \"go\":\"1.14\",
-              \"commit\":\"v1.2.0\"
-            }]"
+          $jsonArrayString = "[`"test1:test2:test3`",`"test4:test5:test6`"]"
+          echo "JSON_ARRAY=${jsonArrayString}" >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
+
+    outputs:
+      JSON_ARRAY: ${{ steps.matrix_json_step.outputs.JSON_ARRAY }}
+
+        # # Use a small PowerShell script to generate the test matrix
+        # #run: "& .github/workflows/create-test-matrix.ps1"
+        # run: |
+        #   echo "::set-output name=matrix::[
+        #     \"branch\": \"2.1.2\",
+        #     \"machine\": [\"ramps14\", \"ramps_16\"],
+        #     {
+        #       \"go\":\"1.13\",
+        #       \"commit\":\"v1.0.0\"
+        #     },
+        #     {
+        #       \"go\":\"1.14\",
+        #       \"commit\":\"v1.2.0\"
+        #     }]"
 
   test:
     name: "Run unit tests"
@@ -89,10 +98,16 @@ jobs:
       CONFIG_NAME: ${{ matrix.machine }}
       V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
 
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+        JSON_ARRAY: ${{ fromJson(needs.matrix.outputs.JSON_ARRAY) }}
+
   
     defaults:
       run:
@@ -114,10 +129,14 @@ jobs:
       CONFIG_NAME: ${{ matrix.machine }}
       V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
 
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+        JSON_ARRAY: ${{ fromJson(needs.matrix.outputs.JSON_ARRAY) }}        
 
     defaults:
       run:
@@ -203,7 +222,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
+        JSON_ARRAY: ${{ fromJson(needs.matrix.outputs.JSON_ARRAY) }}
 
     defaults:
       run:
