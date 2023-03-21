@@ -136,9 +136,9 @@ jobs:
       # Copy config files Marlin folder
       - name: Copy configuration
         run: |
-          ls -la -R
-          cp -a ${{ matrix.machine }}/** MarlinFirmware/Marlin/
-          ls -la -R
+          cp -a ${{ matrix.machine }}/** ./Marlin/Marlin/
+          cd ./Marlin/Marlin
+          ls -la
 
       # Compile firmware
       - name: Compile firmware
