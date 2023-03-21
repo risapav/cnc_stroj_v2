@@ -22,7 +22,7 @@ on:
         #   github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
         #   github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
         #   '["2.1.2"]') }}      
-      machine: [       ramps14,         ramps_16   ]
+      machine: ramps14
       board:
         required: true
         default: mega2560
