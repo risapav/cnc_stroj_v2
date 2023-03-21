@@ -17,12 +17,6 @@ on:
 
   workflow_dispatch:  
     inputs:
-#      token:
-#        default: ${{ github.token }}
-#      repository:
-#        default: ${{ github.repository }}
-#      actor:
-#        default: ${{ github.actor }}
       board:
         required: true
         default: mega2560
@@ -52,12 +46,23 @@ on:
 #  repository-projects: read|write|none
 #  security-events: read|write|none
 #  statuses: read|write|none
-  
-defaults:
-  run:
-    shell: bash
-#    working-directory: ./build
-  
+
+env:
+  MARLIN_VERSION: ${{ matrix.branch }}
+  CONFIG_NAME: ${{ matrix.machine }}
+  V1_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
+
+strategy:
+  fail-fast: false # Allow all machines to finish building
+  matrix:
+    branch: ${{ fromJson(
+      github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
+      github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
+      '["2.1.2"]') }}
+    machine:
+    - ramps14
+    - ramps_16   
+
 jobs:
   test:
     name: "Run unit tests"
@@ -69,6 +74,8 @@ jobs:
     # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: "Checkout source repository"
+        with:
+          path: ${{ matrix.machine }}/**        
 
   build:
     name: 'Build firmware'
@@ -77,27 +84,15 @@ jobs:
       run:
         shell: bash
     runs-on: ubuntu-latest
-         
-    env:
-      MARLIN_VERSION: ${{ matrix.branch }}
-      CONFIG_NAME: ${{ matrix.machine }}    
     
-    strategy:
-      fail-fast: false # Allow all machines to finish building
-      matrix:
-        branch: ${{ fromJson(
-          github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
-          github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
-          '["2.1.2"]') }}
-        machine:
-        - default_Ramps 
+
         
     steps:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: 'Checkout source repository'
         with:
-          path: Configurations/**
+          path: ${{ matrix.machine }}/**
         
       # Cloning repository to the runner:
       - uses: actions/checkout@v3
