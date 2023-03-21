@@ -141,7 +141,7 @@ jobs:
         with:
           name: firmware.zip
         #   name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact
-          parh: |        
+          path: |        
             ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip     
             *.hex
             firmware*  
