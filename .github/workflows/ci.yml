@@ -136,8 +136,9 @@ jobs:
       # Copy config files Marlin folder
       - name: Copy configuration
         run: |
-          cp -a ${{ matrix.machine }}/** ./Marlin/Marlin/
-          cd ./Marlin/Marlin
+          whoami
+          cp -a ${{ matrix.machine }}/. Marlin/Marlin/
+          cd Marlin/Marlin
           ls -la
 
       # Compile firmware
@@ -158,8 +159,7 @@ jobs:
         id: upload_artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: firmware.zip
-        #   name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact
+          name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact
           path: |        
             ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip     
             *.hex
@@ -216,7 +216,7 @@ jobs:
       - name: Downloads artifact
         uses: actions/download-artifact@v3
         with:
-          name: firmware.zip
+          name: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
 
       - name: "list folder"
         run: |
@@ -243,8 +243,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-          asset_path: firmware.zip
-          asset_name: firmware-v${{ github.run_number }}.zip
+          asset_path: ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip
+          asset_name: fw-${{ matrix.machine }}-${{ matrix.branch }}.zip
           asset_content_type: application/zip
 
       - name: "list folder"
