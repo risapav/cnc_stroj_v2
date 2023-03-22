@@ -64,9 +64,7 @@ jobs:
         name: Checkout source repository  
       - id: create_json
         run: |
-          ls -la
           cat firmware/matrix.json >> $GITHUB_OUTPUT
-          echo "GITHUB_OUTPUT: $GITHUB_OUTPUT"
           
   test:
     name: "Run unit tests"
