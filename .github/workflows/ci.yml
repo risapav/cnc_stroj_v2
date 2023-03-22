@@ -56,10 +56,10 @@ on:
 jobs:
   preset_values:
     env:
-      preset: ${{ fromJson({
+      preset: ${{ fromJson(
         "branch": ["2.1.2"],
         "machine": ["ramps14","ramps_16"]
-      }) }}
+      ) }}
     name: Generate test matrix
     runs-on: ubuntu-latest
     outputs:
