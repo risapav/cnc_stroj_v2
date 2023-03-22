@@ -64,8 +64,10 @@ jobs:
         name: Checkout source repository  
       - id: set-matrix
         run: |
-          JSON=$(cat firmware/matrix1.json)
-          echo "matrix=$JSON" >> $GITHUB_OUTPUT
+          JSON=$(cat firmware/matrix.json | sed 's/\s\+$//g')
+          echo "matrix=$JSON" 
+          
+          # >> $GITHUB_OUTPUT
           
   test:
     name: "Run unit tests"
