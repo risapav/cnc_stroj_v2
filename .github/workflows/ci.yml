@@ -47,51 +47,33 @@ on:
 #  security-events: read|write|none
 #  statuses: read|write|none
 
-# env:
-#   branch: "2.1.2"
-#     # ${{ fromJson(
+env:
+  matrix:
+    branch: "2.1.2"
+    machine: 
+      ramps14
+      ramps_16
+    
+   # ${{ fromJson(
 #     #   github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
 #     #   github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
 #     #   '["2.1.2"]') }}      
-#   machine: ramps14
+#  machine: ramps14
 
 jobs:
-  matrix:
+  preset_values:
     name: Generate test matrix
     runs-on: ubuntu-latest
-    # outputs:
-    #   matrix-json: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - uses: actions/checkout@v3
-      - id: set-matrix
-        shell: bash
-        run: |
-          $jsonArrayString = "[`"test1:test2:test3`",`"test4:test5:test6`"]"
-          echo "JSON_ARRAY=${jsonArrayString}" >> $GITHUB_OUTPUT
-          echo ${GITHUB_OUTPUT}
-          env
-
     outputs:
-      JSON_ARRAY: ${{ steps.matrix_json_step.outputs.JSON_ARRAY }}
-
-        # # Use a small PowerShell script to generate the test matrix
-        # #run: "& .github/workflows/create-test-matrix.ps1"
-        # run: |
-        #   echo "::set-output name=matrix::[
-        #     \"branch\": \"2.1.2\",
-        #     \"machine\": [\"ramps14\", \"ramps_16\"],
-        #     {
-        #       \"go\":\"1.13\",
-        #       \"commit\":\"v1.0.0\"
-        #     },
-        #     {
-        #       \"go\":\"1.14\",
-        #       \"commit\":\"v1.2.0\"
-        #     }]"
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: 
+          echo "$matrix" >> $GITHUB_OUTPUT
 
   test:
     name: "Run unit tests"
-    needs: [matrix]
+    needs: preset_values
 
     env:
       MARLIN_VERSION: ${{ matrix.branch }}
@@ -101,7 +83,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        JSON_ARRAY: ${{ fromJson(needs.matrix.outputs.JSON_ARRAY) }}
+        JSON_ARRAY: ${{ fromJson(needs.preset_values.outputs.matrix) }}
 
     defaults:
       run:
@@ -116,7 +98,7 @@ jobs:
 
   build:
     name: Build firmware
-    needs: [matrix, test]
+    needs: [preset_values, test]
 
     env:
       MARLIN_VERSION: ${{ matrix.branch }}
@@ -126,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        JSON_ARRAY: ${{ fromJson(needs.matrix.outputs.JSON_ARRAY) }}        
+        JSON_ARRAY: ${{ fromJson(needs.preset_values.outputs.matrix) }}
 
     defaults:
       run:
@@ -202,7 +184,7 @@ jobs:
 
   deploy:
     name: Release firmware
-    needs: [matrix, build]
+    needs: [preset_values, build]
 
     env:
       MARLIN_VERSION: ${{ matrix.branch }}
@@ -212,7 +194,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        JSON_ARRAY: ${{ fromJson(needs.matrix.outputs.JSON_ARRAY) }}
+        JSON_ARRAY: ${{ fromJson(needs.preset_values.outputs.matrix) }}
 
     defaults:
       run:
