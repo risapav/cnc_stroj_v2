@@ -56,7 +56,7 @@ on:
 jobs:
   preset_values:
   
-    strategy:
+    env:
       matrix: 
         branch: 
           - "2.1.2"
@@ -71,11 +71,11 @@ jobs:
     steps:
       - id: set-matrix
         run: 
-          echo "${{ strategy.matrix }}" >> $GITHUB_OUTPUT
+          echo "${{ env.matrix }}" >> $GITHUB_OUTPUT
       - name: Install PlatformIO Core
         run: |
           echo "GITHUB_OUTPUT: $GITHUB_OUTPUT"
-          echo "${{ toJson(strategy.matrix) }}"
+          echo "${{ toJson(env.matrix) }}"
       
   test:
     name: "Run unit tests"
