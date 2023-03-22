@@ -78,8 +78,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        JSON_ARRAY: ${{ fromJson(needs.preset_values.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.preset_values.outputs.matrix) }}
 
     defaults:
       run:
@@ -103,8 +102,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        JSON_ARRAY: ${{ fromJson(needs.preset_values.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.preset_values.outputs.matrix) }}
 
     defaults:
       run:
@@ -189,8 +187,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        JSON_ARRAY: ${{ fromJson(needs.preset_values.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.preset_values.outputs.matrix) }}
 
     defaults:
       run:
