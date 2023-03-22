@@ -48,8 +48,9 @@ on:
 #  statuses: read|write|none
 
 env:
-  matrix:
-    branch: "2.1.2"
+  preset:
+    branch: 
+      "2.1.2"
     machine: 
       ramps14
       ramps_16
@@ -69,7 +70,7 @@ jobs:
     steps:
       - id: set-matrix
         run: 
-          echo "$matrix" >> $GITHUB_OUTPUT
+          echo "$preset" >> $GITHUB_OUTPUT
 
   test:
     name: "Run unit tests"
