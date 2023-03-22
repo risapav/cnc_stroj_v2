@@ -75,7 +75,7 @@ jobs:
       - name: Install PlatformIO Core
         run: |
           echo "GITHUB_OUTPUT: $GITHUB_OUTPUT"
-          echo "${{ jobs.preset_values.strategy.matrix }}"
+          echo "${{ strategy.matrix }}"
       
   test:
     name: "Run unit tests"
