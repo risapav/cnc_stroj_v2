@@ -71,7 +71,7 @@ jobs:
     steps:
       - id: set-matrix
         run: 
-          echo "${{ jobs.preset_values.strategy.matrix }}" >> $GITHUB_OUTPUT
+          echo "${{ strategy.matrix }}" >> $GITHUB_OUTPUT
       - name: Install PlatformIO Core
         run: |
           echo "GITHUB_OUTPUT: $GITHUB_OUTPUT"
