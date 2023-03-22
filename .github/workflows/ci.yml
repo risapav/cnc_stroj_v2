@@ -62,7 +62,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3  
         name: Checkout source repository  
-      - id: create_json
+      - id: set-matrix
         run: |
           JSON=$(cat firmware/matrix1.json)
           echo "$JSON" >> $GITHUB_OUTPUT
