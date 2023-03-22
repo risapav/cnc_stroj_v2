@@ -64,7 +64,7 @@ jobs:
         name: Checkout source repository  
       - id: create_json
         run: |
-          JSON=$( cat firmware/matrix.json | jp -P )
+          JSON=${{ fromJson( cat firmware/matrix.json ) }}
           echo "$JSON" 
 # >> $GITHUB_OUTPUT
           
