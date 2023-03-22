@@ -54,12 +54,14 @@ on:
 #  machine: ramps14
 
 jobs:
+#---------------------------------------------------------------------
   preset_values:
     name: Generate test matrix
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
+      # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: Checkout source repository  
       - id: set-matrix
@@ -68,6 +70,7 @@ jobs:
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
           
 # | sed -r 's/ //g' )          
+#---------------------------------------------------------------------
   test:
     name: "Run unit tests"
     needs: preset_values
@@ -86,12 +89,13 @@ jobs:
         shell: bash
     runs-on: ubuntu-latest
     steps:
-    # Cloning my repository to the runner:  
+      # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: "Checkout source repository"
         with:
           path: ${{ matrix.machine }}/**        
 
+#---------------------------------------------------------------------
   build:
     name: Build firmware
     needs: [preset_values, test]
@@ -177,6 +181,7 @@ jobs:
           ls -la
           echo "pokus"
 
+#---------------------------------------------------------------------
   deploy:
     name: Release firmware
     needs: [preset_values, build]
@@ -195,9 +200,6 @@ jobs:
         shell: bash    
     runs-on: ubuntu-latest
     
- #   permissions:
- #     contents: write    
-      
     steps:
       - name: Downloads artifact
         uses: actions/download-artifact@v3
