@@ -64,7 +64,7 @@ jobs:
         name: Checkout source repository  
       - id: set-matrix
         run: |
-          JSON=$(cat firmware/matrix.json | sed '/\t/ /;/\n/ /;/\r/ /;/\r/ /;/ //'  )
+          JSON=$(cat firmware/matrix.json | sed '/ //'  )
           echo "matrix=$JSON" 
           
           #sed 's/\s\+$//g' |
