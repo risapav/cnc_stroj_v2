@@ -64,9 +64,10 @@ jobs:
         name: Checkout source repository  
       - id: set-matrix
         run: |
-          JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix.json | sed -r 's/ //g' )
+          JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix.json ) 
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
           
+# | sed -r 's/ //g' )          
   test:
     name: "Run unit tests"
     needs: preset_values
