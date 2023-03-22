@@ -65,9 +65,10 @@ jobs:
       - id: set-matrix
         run: |
           JSON=$(cat firmware/matrix.json | sed -r '/\[$/ {:a;N;s/\]/&/;Ta;s/\n +//g}')
-#          | sed 's/\n/ /g' | sed 's/\t/ /g' | sed 's/\r/ /g' | sed 's/ //g'  )
           echo "matrix=$JSON" 
+
           
+
           #sed 's/\s\+$//g' |
           # >> $GITHUB_OUTPUT
           
