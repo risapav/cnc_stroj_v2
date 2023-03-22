@@ -67,7 +67,9 @@ jobs:
       - id: create_json
         run: |
           ls -la
-          cat firmware/matrix.json >> $GITHUB_OUTPUT
+          cd firmware
+          ls -la
+          cat matrix.json >> $GITHUB_OUTPUT
           echo "GITHUB_OUTPUT: $GITHUB_OUTPUT"
           
   test:
