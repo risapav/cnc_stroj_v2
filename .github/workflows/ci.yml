@@ -65,8 +65,7 @@ jobs:
       - id: create_json
         run: |
           JSON=$(cat firmware/matrix1.json)
-          echo "$JSON" 
-# >> $GITHUB_OUTPUT
+          echo "$JSON" >> $GITHUB_OUTPUT
           
   test:
     name: "Run unit tests"
