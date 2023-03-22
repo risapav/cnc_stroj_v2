@@ -64,9 +64,10 @@ jobs:
         name: Checkout source repository  
       - id: set-matrix
         run: |
-          JSON=$(cat firmware/matrix.json | sed 's/\s\+$//g' | sed '/^$/d')
+          JSON=$(cat firmware/matrix.json | sed '/^$/d' | sed -i 's/[[:blank:]]*$//')
           echo "matrix=$JSON" 
           
+          #sed 's/\s\+$//g' |
           # >> $GITHUB_OUTPUT
           
   test:
