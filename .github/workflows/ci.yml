@@ -46,15 +46,7 @@ on:
 #  repository-projects: read|write|none
 #  security-events: read|write|none
 #  statuses: read|write|none
-
-env:
-  preset:
-    branch: 
-      "2.1.2"
-    machine: 
-      ramps14
-      ramps_16
-    
+  
    # ${{ fromJson(
 #     #   github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
 #     #   github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
@@ -63,6 +55,11 @@ env:
 
 jobs:
   preset_values:
+    env:
+      preset: fromJson({
+        "branch": ["2.1.2"],
+        "machine": ["ramps14","ramps_16"]
+      }) 
     name: Generate test matrix
     runs-on: ubuntu-latest
     outputs:
