@@ -32,28 +32,15 @@ on:
       ref:
         description: Branch / tag / SHA to checkout
   
-#permissions:
-#  actions: read|write|none
-#  checks: read|write|none
-#  contents: read|write|none
-#  deployments: read|write|none
-#  id-token: read|write|none
-#  issues: read|write|none
-#  discussions: read|write|none
-#  packages: read|write|none
-#  pages: read|write|none
-#  pull-requests: read|write|none
-#  repository-projects: read|write|none
-#  security-events: read|write|none
-#  statuses: read|write|none
-  
-   # ${{ fromJson(
+# ${{ fromJson(
 #     #   github.event_name == 'schedule' && '["bugfix-2.1.x"]' ||
 #     #   github.event_name == 'pull_request' && '["bugfix-2.1.x", "2.1.2"]' ||
 #     #   '["2.1.2"]') }}      
 #  machine: ramps14
 
 jobs:
+#---------------------------------------------------------------------
+# prepare build matrix from firmware/matrix.json
 #---------------------------------------------------------------------
   preset_values:
     name: Generate test matrix
@@ -68,8 +55,9 @@ jobs:
         run: |
           JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix.json ) 
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
-          
-# | sed -r 's/ //g' )          
+                 
+#---------------------------------------------------------------------
+# make necessary tests, generated matrix should pass this job
 #---------------------------------------------------------------------
   test:
     name: "Run unit tests"
@@ -94,7 +82,9 @@ jobs:
         name: "Checkout source repository"
         with:
           path: ${{ matrix.machine }}/**        
-
+          
+#---------------------------------------------------------------------
+# make build process
 #---------------------------------------------------------------------
   build:
     name: Build firmware
@@ -150,6 +140,7 @@ jobs:
           cp -a ${{ matrix.machine }}/. Marlin/Marlin/
           cd Marlin/Marlin
           ls -la
+          cat Configuration.h
 
       # Compile firmware
       - name: Compile firmware
@@ -181,6 +172,8 @@ jobs:
           ls -la
           echo "pokus"
 
+#---------------------------------------------------------------------
+# deploy builded release
 #---------------------------------------------------------------------
   deploy:
     name: Release firmware
