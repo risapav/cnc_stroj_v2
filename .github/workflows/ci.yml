@@ -55,6 +55,7 @@ jobs:
           path: firmware
       - id: set-matrix
         run: |
+          ls -la
           JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix.json ) 
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
                  
