@@ -87,7 +87,7 @@ jobs:
         run: |
           whoami
           ls -la
-          cd firmware/${{ matrix.machine }}
+          cd firmware
           ls -la
           cat Configuration.h
           
