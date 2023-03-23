@@ -51,6 +51,8 @@ jobs:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: Checkout source repository  
+        with:
+          path: firmware
       - id: set-matrix
         run: |
           JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix.json ) 
@@ -80,6 +82,8 @@ jobs:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: "Checkout source repository"
+        with:
+          path: firmware/${{ matrix.machine }}
 
       - name: Check Files
         run: |
@@ -116,7 +120,7 @@ jobs:
       - uses: actions/checkout@v3  
         name: Checkout source repository
         with:
-          path: ${{ matrix.machine }}/**
+          path: firmware/${{ matrix.machine }}
         
       # Cloning repository to the runner:
       - uses: actions/checkout@v3
