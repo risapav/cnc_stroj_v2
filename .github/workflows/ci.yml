@@ -139,10 +139,6 @@ jobs:
         run: |
           whoami
           cp -a firmware/${{ matrix.machine }}/. Marlin/Marlin/
-          cat firmware/${{ matrix.machine }}/Configuration.h
-          cat Marlin/Marlin/Configuration.h
-          cd Marlin/Marlin
-          ls -la
 
       # Compile firmware
       - name: Compile firmware
