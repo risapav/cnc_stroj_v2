@@ -51,14 +51,8 @@ jobs:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: Checkout source repository  
-        with:
-          path: firmware
       - id: set-matrix
         run: |
-          ls -la
-          cd firmware
-          ls -la
-          cd ..
           JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix.json ) 
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
                  
@@ -86,16 +80,10 @@ jobs:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: "Checkout source repository"
-        with:
-          path: firmware/${{ matrix.machine }}
 
       - name: Check Files
         run: |
-          whoami
-          ls -la
-          cd firmware/${{ matrix.machine }}
-          ls -la
-          cat Configuration.h
+          cat firmware/${{ matrix.machine }}/Configuration.h
           
           
 #---------------------------------------------------------------------
@@ -123,8 +111,6 @@ jobs:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: Checkout source repository
-        with:
-          path: firmware/${{ matrix.machine }}
         
       # Cloning repository to the runner:
       - uses: actions/checkout@v3
@@ -153,9 +139,7 @@ jobs:
         run: |
           whoami
           cp -a firmware/${{ matrix.machine }}/. Marlin/Marlin/
-          cd Marlin/Marlin
-          ls -la
-          cat Configuration.h
+          cat firmware/${{ matrix.machine }}/Configuration.h
 
       # Compile firmware
       - name: Compile firmware
