@@ -54,6 +54,7 @@ jobs:
       - id: set-matrix
         run: |
           JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix.json ) 
+          echo "matrix=$JSON"
       - id: echo
         run: |
           echo "matrix=$JSON"
