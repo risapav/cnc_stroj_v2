@@ -62,7 +62,7 @@ jobs:
       - id: echo
         run: |
           ls firmware
-          tree ~ -J -L 2 -P '?' -d --noreport firmware/*
+          tree ~ -J -L 2 -P '?' -d --noreport 
           echo "matrix=$JSON"
                  
 #---------------------------------------------------------------------
