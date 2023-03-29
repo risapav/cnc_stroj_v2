@@ -58,13 +58,12 @@ jobs:
       - id: set-matrix
         run: |
           JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix.json ) 
-          echo "matrix=$JSON"
+          echo "matrix=$JSON" >> $GITHUB_OUTPUT
       - id: echo
         run: |
           ls firmware
           tree ~ -J -L 2 -P '?' -d --noreport firmware/*
           echo "matrix=$JSON"
-          echo "matrix=$JSON" >> $GITHUB_OUTPUT
                  
 #---------------------------------------------------------------------
 # make necessary tests, generated matrix should pass this job
