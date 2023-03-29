@@ -57,6 +57,7 @@ jobs:
           echo "matrix=$JSON"
       - id: echo
         run: |
+          ls firmware
           echo "matrix=$JSON"
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
                  
