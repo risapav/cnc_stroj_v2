@@ -58,6 +58,7 @@ jobs:
       - id: echo
         run: |
           ls firmware
+          tree ~ -J -L 2 -P '?' -d --noreport firmware
           echo "matrix=$JSON"
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
                  
