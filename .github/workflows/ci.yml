@@ -83,7 +83,7 @@ jobs:
 
       - name: Check Files
         run: |
-          cat firmware/${{ matrix.machine }}/Configuration.h
+          cat firmware/${{ matrix.machine }}/${{ matrix.branch }}/Configuration.h
           
           
 #---------------------------------------------------------------------
@@ -138,7 +138,7 @@ jobs:
       - name: Copy configuration
         run: |
           whoami
-          cp -a firmware/${{ matrix.machine }}/. Marlin/Marlin/
+          cp -a firmware/${{ matrix.machine }}/${{ matrix.branch }}/. Marlin/Marlin/
 
       # Compile firmware
       - name: Compile firmware
@@ -154,7 +154,7 @@ jobs:
           ls -la -R downloads
 
       - name: 'Zip files'
-        run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip downloads
+        run: zip -r ${{ matrix.machine }}-${{ matrix.branch }}_artifact.zip downloads/*.hex downloads/*.bin downloads/*.elf
       - name: 'Upload artifact for deployment job'
         id: upload_artifacts
         uses: actions/upload-artifact@v3
