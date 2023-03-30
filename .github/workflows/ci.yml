@@ -108,9 +108,9 @@ jobs:
         id: set-build
         run: |
           if test -d ${{ matrix.machine }}/${{ matrix.branch }}; then
-            echo "run_job_build.${{ matrix.machine }}.${{ matrix.branch }}='yes'" >> $GITHUB_OUTPUT
+            echo "run_job_build='yes'" >> $GITHUB_OUTPUT
           else
-            echo "run_job_build.${{ matrix.machine }}.${{ matrix.branch }}='no'" >> $GITHUB_OUTPUT
+            echo "run_job_build='no'" >> $GITHUB_OUTPUT
           fi
   #        echo "${{ outputs.run_job_build }}"    
           
@@ -139,7 +139,9 @@ jobs:
     steps:
       - name: import test
         run: |
-          echo "${{ needs.test.outputs.run_job_build}}" 
+          echo "${{ needs.test.outputs.run_job_build}}"
+          echo "${{ matrix.machine }}"
+          echo ".${{ matrix.branch }}" 
 
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
