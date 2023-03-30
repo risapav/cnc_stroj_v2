@@ -148,7 +148,7 @@ jobs:
           echo "${{ matrix.machine }}"
           echo "${{ matrix.branch }}" 
 
-      if: needs.test.outputs.run_job_build == 'yes'     
+  #    if: needs.test.outputs.run_job_build == 'yes'     
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: Checkout source repository
