@@ -82,9 +82,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      run_job_build: 
-        ${{ matrix.machine }}:
-          ${{ matrix.branch }}: ${{ steps.set-build.outputs.run_job_build }}
+      run_job_build: ${{ steps.set-build.outputs.run_job_build }}
 
     steps:
       # Cloning my repository to the runner:  
