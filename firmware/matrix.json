@@ -4,8 +4,10 @@
     "ramps14",
     "ramps_16"
   ] ,
-  "exclude": {
+  "exclude": [
+    {
     "branch": "2.0.9.2" , 
     "machine": "ramps_16" 
-  }
+    }
+  ]
 }
