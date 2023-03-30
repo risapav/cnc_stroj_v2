@@ -59,11 +59,6 @@ jobs:
         run: |
           JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix.json ) 
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
-      - id: echo
-        run: |
-          ls firmware
-          tree ~ -J -L 2 -P '?' -d --noreport 
-          echo "matrix=$JSON"
                  
 #---------------------------------------------------------------------
 # make necessary tests, generated matrix should pass this job
@@ -100,23 +95,24 @@ jobs:
       run:
         shell: bash
     runs-on: ubuntu-latest
+
+    outputs:
+      run_job_build: ${{ steps.set-build.outputs.run_job_build }}
+
     steps:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: Checkout source repository
       
       - name: Check if ${{ matrix.machine }}/${{ matrix.branch }} folder exists
-        id: set
+        id: set-build
         run: |
           if test -d ${{ matrix.machine }}/${{ matrix.branch }}; then
-            echo "::set-output name=run_job_build::yes"
+            echo "run_job_build='yes'" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=run_job_build::no"
+            echo "run_job_build='no'" >> $GITHUB_OUTPUT
           fi
-
-    outputs:
-      run_job_build: ${{ steps.set.outputs.run_job_build }}
-          
+          echo $GITHUB_OUTPUT    
           
 #---------------------------------------------------------------------
 # make build process
