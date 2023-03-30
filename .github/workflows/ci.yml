@@ -112,7 +112,7 @@ jobs:
           else
             echo "run_job_build='no'" >> $GITHUB_OUTPUT
           fi
-          echo "$GITHUB_OUTPUT"    
+          echo "${{ outputs.run_job_build }}"    
           
 #---------------------------------------------------------------------
 # make build process
