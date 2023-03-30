@@ -114,7 +114,7 @@ jobs:
             echo "run_job_build=no" >> $GITHUB_OUTPUT
             echo "run_job_build=no"
           fi
-          echo "${{ run_job_build }}"    
+
  #         echo '${{ toJSON(github) }}'
           
   #        echo "${{ outputs.run_job_build }}"    
