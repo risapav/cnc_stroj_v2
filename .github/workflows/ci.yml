@@ -83,7 +83,6 @@ jobs:
 
     outputs:
       run_job_build: ${{ steps.set-build.outputs.run_job_build }}
-      exclude: ${{ steps.matrix-exclude.outputs.exclude }}
 
     steps:
       # Cloning my repository to the runner:  
@@ -96,7 +95,7 @@ jobs:
           if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
 #            echo "run_job_build=true" >> $GITHUB_OUTPUT
           else
-            echo '{"branch": $MARLIN_VERSION}' | jq '. + {"machine": $CONFIG_NAME}'
+            echo '{"branch": ${{ matrix.branch }} }' | jq '. + {"machine": ${{ matrix.machine }} }'
             # >> exclude.json
 #            jq '.exclude[.exclude | length]|= . + { "branch": ${{ matrix.ranch }} b, "machine": ${{ matrix.machine }} }' exclude.json
           fi 
