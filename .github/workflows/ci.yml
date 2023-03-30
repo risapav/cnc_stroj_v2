@@ -121,7 +121,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.preset_values.outputs.matrix) }}
-      matrix.exclude: ${{ fromJson(needs.test.outputs.exclude) }}
+        exclude: ${{ fromJson(needs.test.outputs.exclude) }}
 
     defaults:
       run:
