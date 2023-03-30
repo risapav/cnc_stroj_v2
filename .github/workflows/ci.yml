@@ -97,6 +97,8 @@ jobs:
           else
             echo "run_job_build=false" >> $GITHUB_OUTPUT
           fi 
+          jq
+          jq --help
           
 #---------------------------------------------------------------------
 # make build process
