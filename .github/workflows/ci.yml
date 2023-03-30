@@ -98,7 +98,7 @@ jobs:
             jq '.exclude += [{
               "branch": ${{ matrix.branch }},
               "machine": ${{ matrix.machine }} 
-            }]'
+            }]' exclude.json
           fi 
           ls -la
           #cat exclude.json
