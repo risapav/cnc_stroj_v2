@@ -137,9 +137,9 @@ jobs:
            
  #   if: needs.test.outputs.run_job_build == 'yes'           
     steps:
-      -name: import test
-       run: |
-         echo "${{ needs.test.outputs.run_job_build }}" 
+      - name: import test
+        run: |
+          echo "${{ needs.test.outputs.run_job_build }}" 
 
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
