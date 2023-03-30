@@ -112,7 +112,7 @@ jobs:
           else
             echo "run_job_build='no'" >> $GITHUB_OUTPUT
           fi
-          echo "${{ outputs.run_job_build }}"    
+  #        echo "${{ outputs.run_job_build }}"    
           
 #---------------------------------------------------------------------
 # make build process
@@ -135,8 +135,12 @@ jobs:
         shell: bash
     runs-on: ubuntu-latest
            
-    if: needs.test.outputs.run_job_build == 'yes'           
+ #   if: needs.test.outputs.run_job_build == 'yes'           
     steps:
+      -name: import test
+       run: |
+         echo "${{ needs.test.outputs.run_job_build }}" 
+
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: Checkout source repository
