@@ -68,20 +68,20 @@ jobs:
 #---------------------------------------------------------------------
 # make necessary tests, generated matrix should pass this job
 #---------------------------------------------------------------------
-- name: Check for file
-  id: file_check
-  run: |
-    if git status -s | grep -x "** [FILENAME]"; then
-      echo "check_result=true" >> $GITHUB_OUTPUT
-    else
-      echo "check_result=false" >> $GITHUB_OUTPUT
-    fi
-...
-- name: Run dependent step
-  if: steps.file_check.outputs.check_result == 'true'
-  run: |
-    # Do whatever you wanna do on file found to be
-    # added/modified/deleted, based on what you set '**' to
+# - name: Check for file
+#   id: file_check
+#   run: |
+#     if git status -s | grep -x "** [FILENAME]"; then
+#       echo "check_result=true" >> $GITHUB_OUTPUT
+#     else
+#       echo "check_result=false" >> $GITHUB_OUTPUT
+#     fi
+# ...
+# - name: Run dependent step
+#   if: steps.file_check.outputs.check_result == 'true'
+#   run: |
+#     # Do whatever you wanna do on file found to be
+#     # added/modified/deleted, based on what you set '**' to
 
   test:
     name: "Run unit tests"
@@ -105,7 +105,12 @@ jobs:
       - uses: actions/checkout@v3  
         name: "Checkout source repository"
 
-      - name: Check Files
+      - name: Check if ${{ matrix.machine }}/${{ matrix.branch }} folder exists
+        if: always()
+        run: test -d ${{ matrix.machine }}/${{ matrix.branch }}
+
+      - name: When present, upload screenshots of test failures
+        if: success()
         run: |
           cat firmware/${{ matrix.machine }}/${{ matrix.branch }}/Configuration.h
           
