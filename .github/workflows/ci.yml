@@ -82,7 +82,9 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      run_job_build: ${{ steps.set-build.outputs.run_job_build }}
+      run_job_build: 
+        ${{ matrix.machine }}:
+          ${{ matrix.branch }}: ${{ steps.set-build.outputs.run_job_build }}
 
     steps:
       # Cloning my repository to the runner:  
@@ -93,11 +95,11 @@ jobs:
         id: set-build
         run: |
           if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
-            echo "run_job_build.'${{ matrix.machine }}'.'${{ matrix.branch }}'=true" >> $GITHUB_OUTPUT
-            echo "run_job_build=true"
+#            echo "run_job_build.'${{ matrix.machine }}'.'${{ matrix.branch }}'=true" >> $GITHUB_OUTPUT
+            echo "run_job_build=true"  >> $GITHUB_OUTPUT
           else
-            echo "run_job_build.'${{ matrix.machine }}'.'${{ matrix.branch }}'=false" >> $GITHUB_OUTPUT
-            echo "run_job_build=false"
+#            echo "run_job_build.'${{ matrix.machine }}'.'${{ matrix.branch }}'=false" >> $GITHUB_OUTPUT
+            echo "run_job_build=false"  >> $GITHUB_OUTPUT
           fi 
           
 #---------------------------------------------------------------------
