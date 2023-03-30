@@ -139,7 +139,8 @@ jobs:
     steps:
       - name: import test
         run: |
-          echo "${{ needs.test.outputs.run_job_build.${{ matrix.machine }}.${{ matrix.branch }} }}" 
+          JOB=${{ matrix.machine }}.${{ matrix.branch }}
+          echo "${{ needs.test.outputs.run_job_build.$JOB }}" 
 
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
