@@ -109,8 +109,10 @@ jobs:
         run: |
           if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
             echo "run_job_build=yes" >> $GITHUB_OUTPUT
+            echo "run_job_build=yes"
           else
             echo "run_job_build=no" >> $GITHUB_OUTPUT
+            echo "run_job_build=no"
           fi
           echo "${{ run_job_build }}"    
  #         echo '${{ toJSON(github) }}'
