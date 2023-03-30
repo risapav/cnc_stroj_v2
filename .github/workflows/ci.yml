@@ -107,7 +107,6 @@ jobs:
       - name: Check if ${{ matrix.machine }}/${{ matrix.branch }} folder exists
         id: set-build
         run: |
-         ls -la -R
           if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
             echo "run_job_build=yes" >> $GITHUB_OUTPUT
           else
