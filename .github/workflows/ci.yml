@@ -101,7 +101,7 @@ jobs:
             }]'
           fi 
           ls -la
-          cat exclude.json
+          #cat exclude.json
           
 #---------------------------------------------------------------------
 # make build process
