@@ -103,16 +103,19 @@ jobs:
     steps:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
-        name: "Checkout source repository"
-
+        name: Checkout source repository
+      
       - name: Check if ${{ matrix.machine }}/${{ matrix.branch }} folder exists
-        if: always()
-        run: test -d ${{ matrix.machine }}/${{ matrix.branch }}
-
-      - name: When present, upload screenshots of test failures
-        if: success()
+        id: set
         run: |
-          cat firmware/${{ matrix.machine }}/${{ matrix.branch }}/Configuration.h
+          if test -d ${{ matrix.machine }}/${{ matrix.branch }}; then
+            echo "::set-output name=run_job_build::yes"
+          else
+            echo "::set-output name=run_job_build::no"
+          fi
+
+    outputs:
+      run_job_build: ${{ steps.set.outputs.run_job_build }}
           
           
 #---------------------------------------------------------------------
@@ -136,6 +139,7 @@ jobs:
         shell: bash
     runs-on: ubuntu-latest
            
+    if: needs.test.outputs.run_job_build == 'yes'           
     steps:
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
