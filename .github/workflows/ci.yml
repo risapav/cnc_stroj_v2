@@ -83,6 +83,7 @@ jobs:
 
     outputs:
       run_job_build: ${{ steps.set-build.outputs.run_job_build }}
+      matrix_exclude: ${{ steps.matrix-exclude.outputs.matrix_exclude }}
 
     steps:
       # Cloning my repository to the runner:  
@@ -99,6 +100,11 @@ jobs:
           fi 
           jq
           jq --help
+      - name: Exclude from project
+        id: matrix-exclude
+        run: |
+          JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix_exclude.json ) 
+          echo "matrix_exclude=$JSON" >> $GITHUB_OUTPUT          
           
 #---------------------------------------------------------------------
 # make build process
@@ -115,6 +121,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.preset_values.outputs.matrix) }}
+        exclude: ${{ fromJson(needs.test.outputs.matrix_exclude) }}
 
     defaults:
       run:
