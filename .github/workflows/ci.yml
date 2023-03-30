@@ -107,7 +107,7 @@ jobs:
       - name: Check if ${{ matrix.machine }}/${{ matrix.branch }} folder exists
         id: set-build
         run: |
-          if test -d ${{ matrix.machine }}/${{ matrix.branch }}; then
+          if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
             echo "run_job_build='yes'" >> $GITHUB_OUTPUT
           else
             echo "run_job_build='no'" >> $GITHUB_OUTPUT
@@ -141,7 +141,7 @@ jobs:
         run: |
           echo "${{ needs.test.outputs.run_job_build}}"
           echo "${{ matrix.machine }}"
-          echo ".${{ matrix.branch }}" 
+          echo "${{ matrix.branch }}" 
 
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
