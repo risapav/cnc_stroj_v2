@@ -162,11 +162,11 @@ jobs:
           pip install --upgrade platformio
           pio lib --global install olikraus/U8glib@^1.19.1       
 
-      # Copy config files Marlin folder
-      - name: Configuration Marlin directory
-        run: |
-          cp -rf configurations/${{ github.event.inputs.board }}/Configuration.h Marlin/Marlin/
-          cp -rf configurations/${{ github.event.inputs.board }}/Configuration_adv.h Marlin/Marlin/
+      # # Copy config files Marlin folder
+      # - name: Configuration Marlin directory
+      #   run: |
+      #     cp -rf configurations/${{ github.event.inputs.board }}/Configuration.h Marlin/Marlin/
+      #     cp -rf configurations/${{ github.event.inputs.board }}/Configuration_adv.h Marlin/Marlin/
 
       # Copy config files Marlin folder
       - name: Copy configuration
