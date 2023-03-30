@@ -93,10 +93,10 @@ jobs:
         id: set-build
         run: |
           if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
-            echo "run_job_build.${{ matrix.machine }}.${{ matrix.branch }}=true" >> $GITHUB_OUTPUT
+            echo "run_job_build.'${{ matrix.machine }}'.'${{ matrix.branch }}'=true" >> $GITHUB_OUTPUT
             echo "run_job_build=true"
           else
-            echo "run_job_build.${{ matrix.machine }}.${{ matrix.branch }}=false" >> $GITHUB_OUTPUT
+            echo "run_job_build.'${{ matrix.machine }}'.'${{ matrix.branch }}'=false" >> $GITHUB_OUTPUT
             echo "run_job_build=false"
           fi 
           
@@ -125,7 +125,7 @@ jobs:
     steps:
       - name: import test
         run: |
-          echo "${{ needs.test.outputs.run_job_build }}.${{ matrix.machine }}.${{ matrix.branch }}"
+          echo "${{ needs.test.outputs.run_job_build }}.'${{ matrix.machine }}'.'${{ matrix.branch }}'"
           echo "${{ needs.test.outputs.run_job_build }}"
           echo "${{ matrix.machine }}"
           echo "${{ matrix.branch }}" 
