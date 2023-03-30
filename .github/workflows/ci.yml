@@ -96,7 +96,7 @@ jobs:
           if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
 #            echo "run_job_build=true" >> $GITHUB_OUTPUT
           else
-            echo '{"branch": ${{ matrix.branch }} }' | jq '. + {"machine": ${{ matrix.machine }} }'
+            echo '{"branch": $MARLIN_VERSION }' | jq '. + {"machine": $CONFIG_NAME }'
             # >> exclude.json
 #            jq '.exclude[.exclude | length]|= . + { "branch": ${{ matrix.ranch }} b, "machine": ${{ matrix.machine }} }' exclude.json
           fi 
