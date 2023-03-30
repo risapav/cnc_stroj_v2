@@ -94,17 +94,11 @@ jobs:
         id: set-build
         run: |
           if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
-            echo "run_job_build=true" >> $GITHUB_OUTPUT
+            echo
+#            echo "run_job_build=true" >> $GITHUB_OUTPUT
           else
-            echo "run_job_build=false" >> $GITHUB_OUTPUT
+            jq '.exclude[.exclude | length]|= . + { "branch": ${{ matrix.branch }}, "machine": ${{ matrix.machine }} }' exclude.json
           fi 
-          jq
-          jq --help
-      - name: Exclude from project
-        id: matrix-exclude
-        run: |
-          JSON=$(sed '{:q;N;s/\n//g;t q}' firmware/matrix_exclude.json ) 
-          echo "exclude=$JSON" >> $GITHUB_OUTPUT          
           
 #---------------------------------------------------------------------
 # make build process
