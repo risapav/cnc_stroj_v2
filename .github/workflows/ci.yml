@@ -63,21 +63,6 @@ jobs:
 #---------------------------------------------------------------------
 # make necessary tests, generated matrix should pass this job
 #---------------------------------------------------------------------
-# - name: Check for file
-#   id: file_check
-#   run: |
-#     if git status -s | grep -x "** [FILENAME]"; then
-#       echo "check_result=true" >> $GITHUB_OUTPUT
-#     else
-#       echo "check_result=false" >> $GITHUB_OUTPUT
-#     fi
-# ...
-# - name: Run dependent step
-#   if: steps.file_check.outputs.check_result == 'true'
-#   run: |
-#     # Do whatever you wanna do on file found to be
-#     # added/modified/deleted, based on what you set '**' to
-
   test:
     name: "Run unit tests"
     needs: preset_values
@@ -108,16 +93,12 @@ jobs:
         id: set-build
         run: |
           if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
-            echo "run_job_build=yes" >> $GITHUB_OUTPUT
-            echo "run_job_build=yes"
+            echo "run_job_build=true" >> $GITHUB_OUTPUT
+            echo "run_job_build=true"
           else
-            echo "run_job_build=no" >> $GITHUB_OUTPUT
-            echo "run_job_build=no"
-          fi
-
- #         echo '${{ toJSON(github) }}'
-          
-  #        echo "${{ outputs.run_job_build }}"    
+            echo "run_job_build=false" >> $GITHUB_OUTPUT
+            echo "run_job_build=false"
+          fi 
           
 #---------------------------------------------------------------------
 # make build process
@@ -140,7 +121,7 @@ jobs:
         shell: bash
     runs-on: ubuntu-latest
            
-#    if: needs.test.outputs.run_job_build == 'yes'           
+#    if: needs.test.outputs.run_job_build == 'true'           
     steps:
       - name: import test
         run: |
@@ -148,7 +129,7 @@ jobs:
           echo "${{ matrix.machine }}"
           echo "${{ matrix.branch }}" 
 
-  #    if: needs.test.outputs.run_job_build == 'yes'     
+  #    if: needs.test.outputs.run_job_build == 'true'     
       # Cloning my repository to the runner:  
       - uses: actions/checkout@v3  
         name: Checkout source repository
