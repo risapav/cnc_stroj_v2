@@ -95,7 +95,10 @@ jobs:
           if test -d firmware/${{ matrix.machine }}/${{ matrix.branch }}; then
             echo
           else
-            echo '{"branch": ${{ matrix.branch }} }' | jq '. + {"machine": ${{ matrix.machine }} }'
+            jq '.exclude += [{
+              "branch": ${{ matrix.branch }},
+              "machine": ${{ matrix.machine }} 
+            }]'
           fi 
           ls -la
           cat exclude.json
