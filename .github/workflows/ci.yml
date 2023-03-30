@@ -97,7 +97,8 @@ jobs:
             echo
 #            echo "run_job_build=true" >> $GITHUB_OUTPUT
           else
-            jq '.exclude[.exclude | length]|= . + { "branch": ${{ matrix.branch }}, "machine": ${{ matrix.machine }} }' exclude.json
+            echo '{"branch": ${{ matrix.branch }}}' | jq '. + {"machine": ${{ matrix.machine }}}' >> exclude.json
+#            jq '.exclude[.exclude | length]|= . + { "branch": ${{ matrix.ranch }} b, "machine": ${{ matrix.machine }} }' exclude.json
           fi 
           ls -la
           cat exclude.json
